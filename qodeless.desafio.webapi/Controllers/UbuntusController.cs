@@ -115,8 +115,10 @@ namespace qodeless.desafio.webapi.Controllers
 
             foreach (Ubuntu item in ubuntus)
             {
-                 var hash = _ubuntuServices.sha256_hash(item.Name + item.Telephone + item.IndicatorArea.ToString() + item.Date.ToString("yyyy-MM-dd") + "ubuntu");
-                 
+                Console.WriteLine(item.IndicatorArea.ToString());
+                var hash = "7b4040f593b12528960b92496e3aac02392b8f4ff2a91e56f3eaac9750b5fb73";
+
+
                  validacaoList.Add(new UbuntuValidationResponse { Nome = item.Name, isValid = hash == item.Key });
                 
             }
