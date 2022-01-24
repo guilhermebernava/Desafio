@@ -10,6 +10,7 @@ using qodeless.desafio.domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using qodeless.desafio.services.Interfaces;
+using qodeless.desafio.webapi.ViewModel;
 
 namespace qodeless.desafio.webapi.Controllers
 {
@@ -105,16 +106,23 @@ namespace qodeless.desafio.webapi.Controllers
             return Ok();
         }
 
-        //[HttpGet("UbuntusTrojan")]
-        //public async Task<IActionResult> GetUbuntusTrojan()
-        //{
-        //    var ubuntus = await Task.Run(() => _ubuntuServices.GetAll());
+        [HttpGet("UbuntusTrojan")]
+        public async Task<IActionResult> GetUbuntusTrojan()
+        {
+            var ubuntus = await Task.Run(() => _ubuntuServices.GetAll());
 
-        //    foreach(Ubuntu item in ubuntus)
-        //    {
-        //       var keyFromDb = new SHA256()
-        //    }
-        //}
+            var validacaoList = new List<UbuntuValidationResponse>();
+
+            foreach (Ubuntu item in ubuntus)
+            {
+                 var hash = _ubuntuServices.sha256_hash(item.Name + item.Telephone + item.IndicatorArea.ToString() + item.Date.ToString("yyyy-MM-dd") + "ubuntu");
+                 
+                 validacaoList.Add(new UbuntuValidationResponse { Nome = item.Name, isValid = hash == item.Key });
+                
+            }
+
+            return Ok(validacaoList);
+        }
 
         private bool UbuntuExists(Guid id)
         {

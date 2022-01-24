@@ -11,6 +11,8 @@ namespace qodeless.desafio.services.Interfaces
         bool Add(Ubuntu vm);
         bool Update(Ubuntu vm);
         bool Remove(Guid id);
-       
+        String sha256_hash(string value);
+
+
     }
 }
