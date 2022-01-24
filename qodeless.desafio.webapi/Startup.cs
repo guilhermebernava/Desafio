@@ -145,7 +145,7 @@ namespace qodeless.desafio.webapi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "DesafioQodeless API v1");
                 c.RoutePrefix = "swagger";
-                c.DocumentTitle = "PrimePix API";
+                c.DocumentTitle = "DesafioQodeless API";
                 c.InjectStylesheet("/docs/SwaggerHeader.css");
             });
             app.UseDeveloperExceptionPage();
