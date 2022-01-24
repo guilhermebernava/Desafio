@@ -9,40 +9,42 @@ using qodeless.desafio.Infra.CrossCutting.identity.Data;
 using qodeless.desafio.domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using qodeless.desafio.services.Interfaces;
 
 namespace qodeless.desafio.webapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class UbuntusController : ControllerBase
+    public class UbuntusController : ApiController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUbuntuServices _ubuntuServices;
 
-        public UbuntusController(ApplicationDbContext context)
+        public UbuntusController(ApplicationDbContext db, IUbuntuServices ubuntuServices) : base(db)
         {
-            _context = context;
+            _ubuntuServices = ubuntuServices;
         }
 
         // GET: api/Ubuntus
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ubuntu>>> GetUbuntus()
+        public async Task<IActionResult> GetUbuntus()
         {
-            return await _context.Ubuntus.ToListAsync();
+            var result = await Task.Run(() => _ubuntuServices.GetAll());
+            return Ok(result);
         }
 
         // GET: api/Ubuntus/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ubuntu>> GetUbuntu(Guid id)
+        public async Task<IActionResult> GetUbuntu(Guid id)
         {
-            var ubuntu = await _context.Ubuntus.FindAsync(id);
+            var result = await Task.Run(() => _ubuntuServices.GetById(id));
 
-            if (ubuntu == null)
+            if (result == null)
             {
                 return NotFound();
             }
 
-            return ubuntu;
+            return Ok(result);
         }
 
         // PUT: api/Ubuntus/5
@@ -55,11 +57,11 @@ namespace qodeless.desafio.webapi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(ubuntu).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                _ubuntuServices.Update(ubuntu);
+                await Db.SaveChangesAsync();
+                return Ok();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -81,8 +83,8 @@ namespace qodeless.desafio.webapi.Controllers
         [HttpPost]
         public async Task<ActionResult<Ubuntu>> PostUbuntu(Ubuntu ubuntu)
         {
-            _context.Ubuntus.Add(ubuntu);
-            await _context.SaveChangesAsync();
+            _ubuntuServices.Add(ubuntu);
+            await Db.SaveChangesAsync();
 
             return CreatedAtAction("GetUbuntu", new { id = ubuntu.Id }, ubuntu);
         }
@@ -91,21 +93,32 @@ namespace qodeless.desafio.webapi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUbuntu(Guid id)
         {
-            var ubuntu = await _context.Ubuntus.FindAsync(id);
+            var ubuntu = await Task.Run(() => _ubuntuServices.GetById(id));
             if (ubuntu == null)
             {
                 return NotFound();
             }
 
-            _context.Ubuntus.Remove(ubuntu);
-            await _context.SaveChangesAsync();
+            _ubuntuServices.Remove(id);
+            await Db.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
+
+        //[HttpGet("UbuntusTrojan")]
+        //public async Task<IActionResult> GetUbuntusTrojan()
+        //{
+        //    var ubuntus = await Task.Run(() => _ubuntuServices.GetAll());
+
+        //    foreach(Ubuntu item in ubuntus)
+        //    {
+        //       var keyFromDb = new SHA256()
+        //    }
+        //}
 
         private bool UbuntuExists(Guid id)
         {
-            return _context.Ubuntus.Any(e => e.Id == id);
+            return Db.Ubuntus.Any(e => e.Id == id);
         }
     }
 }

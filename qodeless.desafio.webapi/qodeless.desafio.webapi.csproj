@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\qodeless.desafio.crosscutting.identity\qodeless.desafio.CrossCutting.identity.csproj" />
     <ProjectReference Include="..\qodeless.desafio.Ioc\qodeless.desafio.Ioc.csproj" />
+    <ProjectReference Include="..\qodeless.desafio.services\qodeless.desafio.services.csproj" />
   </ItemGroup>
 
 </Project>

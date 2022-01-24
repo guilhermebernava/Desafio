@@ -7,6 +7,8 @@ using qodeless.desafio.crosscutting.identity.Entities;
 using qodeless.desafio.crosscutting.identity.Repositories;
 using qodeless.desafio.domain.Interfaces;
 using qodeless.desafio.Infra.CrossCutting.identity.Data;
+using qodeless.desafio.services.Interfaces;
+using qodeless.desafio.services.Services;
 
 namespace qodeless.desafio.Infra.CrossCutting.Ioc
 {
@@ -19,6 +21,8 @@ namespace qodeless.desafio.Infra.CrossCutting.Ioc
 
             // Infra - Identity
             services.AddScoped<IUser, AspNetUser>();
+
+            services.AddScoped<IUbuntuServices, UbuntuServices>();
 
             // Data - Repository
             services.AddScoped<IUbuntuRepository, UbuntuRepository>();

@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\qodeless.desafio.crosscutting.identity\qodeless.desafio.CrossCutting.identity.csproj" />
+    <ProjectReference Include="..\qodeless.desafio.services\qodeless.desafio.services.csproj" />
     <ProjectReference Include="..\qodeless.domain\qodeless.desafio.domain.csproj" />
   </ItemGroup>
 
